@@ -1,13 +1,18 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 export default function TripList() {
   const [trips, setTrips] = useState([]);
   const [url, setUrl] = useState("http://localhost:3000/trips");
   console.log(trips);
-  useEffect(() => {
-    fetch(url)
-      .then((res) => res.json())
-      .then((json) => setTrips(json));
+
+  const fetchTrips = useCallback(async () => {
+    const response = await fetch(url);
+    const json = await response.json();
+    setTrips(json);
   }, [url]);
+
+  useEffect(() => {
+    fetchTrips(url);
+  }, [url, fetchTrips]);
 
   return (
     <div className="trip-list">
